@@ -6,6 +6,7 @@ using Acme.BookStore.Permissions;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Uow;
 
 namespace Acme.BookStore.Authors
 {
@@ -17,7 +18,8 @@ namespace Acme.BookStore.Authors
 
     public AuthorAppService(
         IAuthorRepository authorRepository,
-        AuthorManager authorManager)
+        AuthorManager authorManager
+        )
     {
       _authorRepository = authorRepository;
       _authorManager = authorManager;
@@ -86,8 +88,10 @@ namespace Acme.BookStore.Authors
 
       author.BirthDate = input.BirthDate;
       author.ShortBio = input.ShortBio;
+      author.ConcurrencyStamp = input.ConcurrencyStamp;
 
       await _authorRepository.UpdateAsync(author);
+
     }
 
     [Authorize(BookStorePermissions.Authors.Delete)]
